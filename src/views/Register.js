@@ -76,16 +76,14 @@ function Register() {
     return (
             <div className="flex flex-row w-full h-auto">
                 <div className="w-full h-auto relative">
+                    <img className="absolute top-8 left-8 w-12 h-12" src={Logo} />
                     <div className="w-full md:w-10/12 bg-white h-full md:h-screen flex flex-col md:flex-row items-center md:items-stretch">
-                        <div className="w-full md:w-1/12 md:h-auto bg-white flex flex-row md:flex-col">
-                            <div className="p-0 lg:p-6">
-                                <img className="w-12 h-auto" src={Logo} />
-                            </div>
-                            <div className="h-full hidden md:flex flex-col justify-center items-center">
+                        <div className="w-full md:w-1/12 md:h-auto bg-white hidden lg:flex flex-row md:flex-col">
+                            <div className="h-full flex flex-col justify-center items-center">
                                 <img className="w-18 md:mb-48" src={arrow} />
                             </div>
                         </div>
-                        <div className="w-full md:w-11/12 h-full px-8">
+                        <div className="w-full md:w-11/12 h-full px-8 mt-20 lg:m-0">
                             <div className="w-auto h-full md:h-screen py-4 lg:py-16">
                                 <div className="pb-4 h-auto">
                                 {switchStepper(step)}
@@ -99,18 +97,16 @@ function Register() {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="w-full h-128 absolute top-0 left-0"> */}
-                            <div className="w-80 absolute bottom-24 right-64">
-                                <img className="w-full h-auto" src={Logobg} />
-                            </div>
-                            <div className="absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
-                                <div className="flex flex-row justify-between">
-                                    <p className="uppercase">sobre xfiv</p>
-                                    <div>X</div>
-                                </div>
-                                <p className="text-blue-300 text-start pt-2">Puedes configurar tu bot de auto respuestas para que se encarguen de gestiones frecuentes y comunes por si solos sin depender de personal de asistencia.</p>
-                            </div>
-                    {/* </div> */}
+                    <div className="w-80 absolute bottom-24 right-64">
+                        <img className="w-full h-auto" src={Logobg} />
+                    </div>
+                    <div className="absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
+                        <div className="flex flex-row justify-between">
+                            <p className="uppercase">sobre xfiv</p>
+                            <div>X</div>
+                        </div>
+                        <p className="text-blue-300 text-start pt-2">Puedes configurar tu bot de auto respuestas para que se encarguen de gestiones frecuentes y comunes por si solos sin depender de personal de asistencia.</p>
+                    </div>
                 </div>
                 <div className="hidden md:block w-96 h-auto lg:h-screen">
                     <StepBar listStep={listStep} />
