@@ -39,12 +39,25 @@ function Register() {
     const [countries, setCountries] = useState([])
     const [totalPrice, setPriceSum] = useState(0)
     const [buttonVal, setButtonVal] = useState(false)
+    const [passValidate, setPassValidate] = useState(false)
+    const [emailValidate, setEmailValidate] = useState(false)
+    const [userValidate, setUserValidate] = useState(false)
     const [listStep, setListStep] = useState([
         {text: "Información", active: true},
         {text: "Pago", active: false},
         {text: "Envío de datos", active: false},
         {text: "Finalizar", active: false}
     ])
+    useEffect(() => {
+        if(userRegister.userName!==""&& 
+            userRegister.email!==""&& 
+            userRegister.password!=="" && 
+            !passValidate && 
+            !emailValidate && 
+            !userValidate){
+            setButtonVal(true)
+        }
+    },[passValidate,emailValidate,userValidate])
     useEffect(() => {
         let config = {
             method: "get",
@@ -102,7 +115,10 @@ function Register() {
     let switchStepper = (val) =>{
         switch (val) {
             case 0:
-                return <FormPersonal validate={validate} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} userRegister={userRegister} changeUserData={changeUserData} />
+                return <FormPersonal validate={validate} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
+                userRegister={userRegister} changeUserData={changeUserData} 
+                passValidate={passValidate} emailValidate={emailValidate} userValidate={userValidate}
+                />
                 break;
             case 1:
                 return <FormPayment listCountries={countries} paymentData={paymentData} changePaymentData={changePaymentData} />
@@ -118,7 +134,7 @@ function Register() {
         let newData = Object.assign({},userRegister)
         newData[e.target.name] = e.target.value
         setUserRegister(newData)
-        validate(e, e.target.value)
+        validate(e.target.name, e.target.value)
     }
     let changePaymentData = (e) =>{
         let newData = Object.assign({},paymentData)
@@ -173,30 +189,34 @@ function Register() {
 
     let validate = (name, value) => {
         let validatePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/
-        let validateUserAdmin = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{5,20}$/
+        let validateUserAdmin = /^(?=\w*[A-Z])(?=\w*[a-z])\S{5,20}$/
         let validateEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-        let query
-        // switch (name) {
-        //     case "password":
-                
-        //         break;
-        //     case "user":
-                
-        //         break;
-        //     case "email":
-                
-        //     break;
-        //     default:
-        //         break;
-        // }
-        // if(!value.match(validatePass)){
-        //     setAdvert("ya")
-        //     console.log("Valdidar contraseña")
-        // }else{
-        //     setAdvert("validado")
-        //     console.log("Listo")
-            
-        // }
+        switch (name) {
+            case "password":
+                if(value !== "" && !value.match(validatePass)){
+                    setPassValidate(true)
+                }else{
+                    setPassValidate(false)
+                }
+                break;
+            case "userName":
+                if(value !== "" && !value.match(validateUserAdmin)){
+                    setUserValidate(true)
+                }else{
+                    setUserValidate(false)
+                }
+                break;
+            case "email":
+                if(value !== "" && !value.match(validateEmail)){
+                    setEmailValidate(true)
+                }else{
+                    setEmailValidate(false)
+                }
+            break;
+            default:
+                break;
+        }
+        
     }
     return (
             <div className="flex flex-row w-full h-auto">
@@ -211,7 +231,6 @@ function Register() {
                         <div className="w-full md:w-11/12 h-full px-8 mt-20 lg:m-0">
                             <form className="w-auto h-full md:h-screen py-4 lg:py-16">
                                 {switchStepper(step)}
-                                <p>{advert}</p>
                                 {step !== 2 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
                                     <Button onClickEvent={()=>nextStep()} buttonVal={buttonVal} text={textButton} />
                                     <p className="font-normal">o</p>

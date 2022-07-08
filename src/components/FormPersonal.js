@@ -4,12 +4,14 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem';
 
 
-function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserData, listChannels, validate}) {
+function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserData, listChannels, passValidate, emailValidate, userValidate}) {
     const [totalPrice, setTotalPrice] = useState(0)
     const [priceAgent, setPricePerAgent] = useState(0)
     const [totalPricesChannels, setTotalPricesChannels] = useState(0)
     const [channels, setChannels] = useState([])
     const [typeChannel, setTypeChannel] = useState("")
+
+
     const pricePerAgent = 15
     const typeChat = [
         {label:"WhatsApp", value:"WhatsApp"},
@@ -54,16 +56,18 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
                         <TextField value={userRegister.fullName} onChange={(e)=>changeUserData(e)} name="fullName" className="w-full"  label="Nombre completo" variant="outlined" />
                         <div className="w-full flex flex-row gap-x-6">
-                            <div>
-                                <TextField value={userRegister.userName} onChange={(e)=>changeUserData(e)} name="userName" className="w-2/5"  label="Nombre de usuario" variant="outlined" />
-                                <div>
+                            <div className="w-2/5 relative">
+                                <TextField value={userRegister.userName} onChange={(e)=>changeUserData(e)} name="userName" className="w-full"  label="Nombre de usuario" variant="outlined" />
+                                {userValidate?    <div className="absolute w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
+                                border-primary border mt-2 shadow-sm shadow-primary ">
                                     <p>El nombre de usuario debe contener:</p>
-                                    <lu>
+                                    <ul>
                                         <li>Mínimo 5 caracteres</li>
                                         <li>Mínimo 1 letra mayúscula</li>
                                         <li>Mínimo 1 letra minúscula</li>
-                                    </lu>
+                                    </ul>
                                 </div>
+                                :""}
                             </div>
                             <TextField value={userRegister.businessName} onChange={(e)=>changeUserData(e)} name="businessName" className="w-3/5"  label="Nombre de empresa" variant="outlined" />
                         </div>
@@ -74,29 +78,30 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                         <div>
                             <TextField value={userRegister.email} onChange={(e)=>changeUserData(e)} name="email" className="w-full" type="email" 
                             label="Correo eletrónico" variant="outlined" />
-                            <div>
+                            {emailValidate?<div className="">
                                 <p>El correo electrónico no es válido.</p>
-                            </div>
+                            </div>:""}
                          </div>
-                        <div> 
+                        <div className="w-full relative"> 
                             <TextField inputProps={{ inputMode: 'text', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$' }} type="password" 
                             value={userRegister.password} onChange={(e)=>changeUserData(e)} name="password" className="w-full"  label="Contraseña" variant="outlined" />
-                            <div>
+                            {passValidate ? <div className="absolute w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
+                                border-primary border mt-2 shadow-sm shadow-primary ">
                                 <p>La contraseña debe tener:</p>
-                                <lu>
+                                <ul>
                                     <li>Mínimo 8 caracteres</li>
                                     <li>Mínimo 1 letra mayúscula</li>
                                     <li>Mínimo 1 letra minúscula</li>
                                     <li>Mínimo 1 caractere especial</li>
-                                </lu>
-                            </div>
+                                </ul>
+                            </div>:""}
                         </div>
                     </div>
                 </div>
                 <div className="w-full md:w-1/2 mt-6 md:mt-0">
                     <h1 className="text-3xl font-semibold mb-4">Selección de canales</h1>
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
-                        <Select onChange={(e)=>setTypeChannel(e.target.value)} >
+                        {/* <Select onChange={(e)=>setTypeChannel(e.target.value)} >
                             {typeChat.map((channel,i) => {
                                 return <MenuItem key={i} value={channel.value} disabled={i!==0}>{channel.label}</MenuItem>
                             })}
@@ -105,7 +110,7 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                             {listChannels.map((channel,i) => {
                                 return <MenuItem key={i} value={i}>{channel.label}</MenuItem>
                             })}
-                        </Select>
+                        </Select> */}
                         <TextField value={userRegister.agents} onChange={(e)=>changeAgent(e)} name="agents" className="w-full" label="Número de agentes" variant="outlined" />
                         <p className="text-2xl font-extralight text-gray-500">C/1 Asistente virtual  = +30$</p>
                         <p className="text-2xl font-extralight text-gray-500">Total {totalPrice}</p>
