@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserData, listChannels, passValidate, emailValidate, userValidate}) {
@@ -10,7 +11,6 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
     const [totalPricesChannels, setTotalPricesChannels] = useState(0)
     const [channels, setChannels] = useState([])
     const [typeChannel, setTypeChannel] = useState("")
-
 
     const pricePerAgent = 15
     const typeChat = [
@@ -38,7 +38,6 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
     }
     let changeChannelsSelect = (e) => {
         let channelsel = listChannels[e.target.value]
-        console.log(channelsel)
         setUserRegister({...userRegister, channels:channelsel.label})
         setTotalPricesChannels(channelsel.price)
     }
@@ -55,10 +54,11 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                     <h1 className="text-3xl font-semibold mb-4">Información de cuenta</h1>
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
                         <TextField value={userRegister.fullName} onChange={(e)=>changeUserData(e)} name="fullName" className="w-full"  label="Nombre completo" variant="outlined" />
-                        <div className="w-full flex flex-row gap-x-6">
-                            <div className="w-2/5 relative">
+                        <div className="w-full flex flex-col md:flex-row gap-x-6">
+                            <div className="w-full mb-4 md:m-0 md:w-2/5 relative">
                                 <TextField value={userRegister.userName} onChange={(e)=>changeUserData(e)} name="userName" className="w-full"  label="Nombre de usuario" variant="outlined" />
-                                {userValidate?    <div className="absolute w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
+                                { userValidate ? 
+                                <div className="absolute w-full md:w-80  bg-white py-2 px-4 z-10 h-auto rounded-lg
                                 border-primary border mt-2 shadow-sm shadow-primary ">
                                     <p>El nombre de usuario debe contener:</p>
                                     <ul>
@@ -69,11 +69,11 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                                 </div>
                                 :""}
                             </div>
-                            <TextField value={userRegister.businessName} onChange={(e)=>changeUserData(e)} name="businessName" className="w-3/5"  label="Nombre de empresa" variant="outlined" />
+                            <TextField value={userRegister.businessName} onChange={(e)=>changeUserData(e)} name="businessName" className="w-full md:w-3/5"  label="Nombre de empresa" variant="outlined" />
                         </div>
-                        <div className="w-full flex flex-row gap-x-6">
-                            <TextField value={userRegister.codeCountry} onChange={(e)=>changeUserData(e)} name="codeCountry" className="w-2/5"  label="Código de país" variant="outlined" />
-                            <TextField value={userRegister.phone} onChange={(e)=>changeUserData(e)} name="phone" className="w-3/5"  label="Número telefónico" variant="outlined" />
+                        <div className="w-full flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-6">
+                            <TextField value={userRegister.codeCountry} onChange={(e)=>changeUserData(e)} name="codeCountry" className="w-full md:w-2/5"  label="Código de país" variant="outlined" />
+                            <TextField value={userRegister.phone} onChange={(e)=>changeUserData(e)} name="phone" className="w-full md:w-3/5"  label="Número telefónico" variant="outlined" />
                         </div>
                         <div>
                             <TextField value={userRegister.email} onChange={(e)=>changeUserData(e)} name="email" className="w-full" type="email" 
@@ -85,7 +85,7 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                         <div className="w-full relative"> 
                             <TextField inputProps={{ inputMode: 'text', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$' }} type="password" 
                             value={userRegister.password} onChange={(e)=>changeUserData(e)} name="password" className="w-full"  label="Contraseña" variant="outlined" />
-                            {passValidate ? <div className="absolute w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
+                            {passValidate ? <div className="absolute w-full md:w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
                                 border-primary border mt-2 shadow-sm shadow-primary ">
                                 <p>La contraseña debe tener:</p>
                                 <ul>
@@ -101,19 +101,42 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                 <div className="w-full md:w-1/2 mt-6 md:mt-0">
                     <h1 className="text-3xl font-semibold mb-4">Selección de canales</h1>
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
-                        {/* <Select onChange={(e)=>setTypeChannel(e.target.value)} >
+                        <Select onChange={(e)=>setTypeChannel(e.target.value)} value={typeChannel} 
+                        // input={<OutlinedInput label="Canal" />}
+                        displayEmpty
+                        renderValue={(selected) => {
+                            if (selected === "") {
+                                return <em>Seleccionar medios</em>;
+                            }
+                            return selected;
+                        }} 
+                        >
+                            <MenuItem disabled value="">
+                                <em>Seleccionar medios</em>
+                            </MenuItem>
                             {typeChat.map((channel,i) => {
                                 return <MenuItem key={i} value={channel.value} disabled={i!==0}>{channel.label}</MenuItem>
                             })}
                         </Select>
-                        <Select onChange={(e)=>changeChannelsSelect(e)} >
+                        {typeChannel!== "" ? <Select onChange={(e)=>changeChannelsSelect(e)}
+                        value={userRegister.channels}
+                        displayEmpty
+                        renderValue={(selected) => {
+                            if (selected === "") {
+                                return <em>Seleccionar canal</em>;
+                            }
+                            return selected;
+                        }} >
+                            <MenuItem disabled value="">
+                                <em>Seleccionar canal</em>
+                            </MenuItem>
                             {listChannels.map((channel,i) => {
                                 return <MenuItem key={i} value={i}>{channel.label}</MenuItem>
                             })}
-                        </Select> */}
-                        <TextField value={userRegister.agents} onChange={(e)=>changeAgent(e)} name="agents" className="w-full" label="Número de agentes" variant="outlined" />
-                        <p className="text-2xl font-extralight text-gray-500">C/1 Asistente virtual  = +30$</p>
-                        <p className="text-2xl font-extralight text-gray-500">Total {totalPrice}</p>
+                        </Select>:""}
+                        <TextField value={userRegister.agents} type="number" onChange={(e)=>changeAgent(e)} name="agents" className="w-full" label="Número de agentes" variant="outlined" />
+                        <p className="text-2xl font-extralight text-gray-500">C/1 Asistente virtual  = +{pricePerAgent}$</p>
+                        <p className="text-2xl font-extralight text-gray-500">Costo Total {totalPrice}</p>
                     </div>
                 </div>
             </div>

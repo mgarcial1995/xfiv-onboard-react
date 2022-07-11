@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Logo from "../assets/Logo.png"
 import Logobg from "../assets/Logobg.png"
 import arrow from "../assets/arrow.png"
+import check from "../assets/check.svg"
 import enter from "../assets/enter.png"
 import FormPersonal from "../components/FormPersonal"
 import FormPayment from "../components/FormPayment"
@@ -18,7 +19,6 @@ function Register() {
         phone: "",
         email: "",
         password: "",
-        // channels: null,
         channels: "",
         agents: 0
     }
@@ -51,28 +51,47 @@ function Register() {
     useEffect(() => {
         if(userRegister.userName!==""&& 
             userRegister.email!==""&& 
-            userRegister.password!=="" && 
+            userRegister.password!=="" &&
+            userRegister.fullName!==""&& 
+            userRegister.businessName!==""&& 
+            userRegister.codeCountry!=="" && 
+            userRegister.phone!==""&& 
+            userRegister.channels!==""&& 
+            userRegister.agents!==0 &&
             !passValidate && 
             !emailValidate && 
-            !userValidate){
+            !userValidate)
+        {
             setButtonVal(true)
         }
-    },[passValidate,emailValidate,userValidate])
+    },[passValidate,emailValidate,userValidate,userRegister])
     useEffect(() => {
-        let config = {
+        let configcountries = {
             method: "get",
-            url: `https://www.universal-tutorial.com/api/countries/`,
+            url: `https://www.universal-tutorial.com/api/getaccesstoken`,
             headers: {
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiIxOTk1QGdtYWlsLmNvbSIsImFwaV90b2tlbiI6Ik53WHZQdG03ZEFDejdERGx3QkVENW1ILVZOZ1VUYmhxWlYzTzJ5TWR2d1lVYUg0TWlweExCQVJTYTNpcWJoZTdsYncifSwiZXhwIjoxNjU3MTU1MTk0fQ.Xer0NbE7Y-_AIvOm4vUxckl9YXm4e80KlOz5rtzcr5I",
+                "api-token": "NwXvPtm7dACz7DDlwBED5mH-VNgUTbhqZV3O2yMdvwYUaH4MipxLBARSa3iqbhe7lbw",
+                "user-email": "1995@gmail.com"
             }
         };
-        axios(config)
+        axios(configcountries)
         .then((response) => {
-            setCountries(response.data)
+            let config = {
+                method: "get",
+                url: `https://www.universal-tutorial.com/api/countries/`,
+                headers: {
+                    Authorization: "Bearer "+response.data.auth_token,
+                }
+            };
+            axios(config)
+            .then((response) => {
+                setCountries(response.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         })
-        .catch((error) => {
-            console.log(error);
-        });
+        
         let configChannels = {
             method: "get",
             url: "http://52.25.41.89:5056/api/channels",
@@ -115,7 +134,7 @@ function Register() {
     let switchStepper = (val) =>{
         switch (val) {
             case 0:
-                return <FormPersonal validate={validate} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
+                return <FormPersonal listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
                 userRegister={userRegister} changeUserData={changeUserData} 
                 passValidate={passValidate} emailValidate={emailValidate} userValidate={userValidate}
                 />
@@ -169,6 +188,27 @@ function Register() {
               "roles": "adminstrator"
             },
             "users": []
+        }
+        let newdata = {
+            "provedor": "360dialog",
+            "keys": [
+                {
+                "key": "JzBjlBVhZk3cNzqD9PbZrRwsAK",
+                "channel": userRegister.channels[0].label,
+                "phone": "663988446978209"
+                }
+            ],
+            "phone": "421958931993117",
+            "empresa": {
+                "name": "string",
+                "location": "en_US",
+                "email": "user@example.com",
+                "agents": 0,
+                "limits": 0,
+                "user_admin": "string",
+                "password": "stringst",
+                "roles": "administrator"
+            },
         }
         console.log(newUserData)
         let config = {
@@ -234,19 +274,21 @@ function Register() {
                                 {step !== 2 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
                                     <Button onClickEvent={()=>nextStep()} buttonVal={buttonVal} text={textButton} />
                                     <p className="font-normal">o</p>
-                                    <p className="font-semibold">pulse enter </p>
+                                    {step === 0?<p className="font-semibold">pulse enter </p> : 
+                                    <p className="font-semibold ">Omitir este paso </p>
+                                    }
                                     <img src={enter} />
                                 </div> : ""}
                             </form>
                         </div>
                     </div>
-                    <div className="w-80 absolute bottom-24 right-64">
+                    <div className="hidden md:block w-80 absolute bottom-24 right-64">
                         <img className="w-full h-auto" src={Logobg} />
                     </div>
-                    <div className="absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
+                    <div className="hidden md:block absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
                         <div className="flex flex-row justify-between">
                             <p className="uppercase">sobre xfiv</p>
-                            <div>X</div>
+                            <div> <img src={check} /> </div>
                         </div>
                         <p className="text-blue-300 text-start pt-2">Puedes configurar tu bot de auto respuestas para que se encarguen de gestiones frecuentes y comunes por si solos sin depender de personal de asistencia.</p>
                     </div>

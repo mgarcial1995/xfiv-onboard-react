@@ -18,7 +18,7 @@ function FormPayment({paymentData, changePaymentData, listCountries}) {
         }
         changePaymentData(e)
     }
-    let changeCVC = (event) => {
+    let changeDateCC = (event) => {
         var inputChar = String.fromCharCode(event.keyCode);
         var code = event.keyCode;
         var allowedKeys = [8];
@@ -59,7 +59,7 @@ function FormPayment({paymentData, changePaymentData, listCountries}) {
                             <input onChange={(e)=>changeCC(e)} type="tel" inputMode="numeric" pattern="[0-9\s]{13,19}" autoComplete="cc-number" maxLength="19" name="cardNumber" 
                             placeholder="0000 0000 0000 0000" className="h-14 border-gray-400 border rounded-md p-2 outline-blue-500" />
                             <div className="w-full flex flex-row gap-x-6">
-                                <input onChange={(e)=>changeCVC(e)} type="text" maxLength='5' inputmode="numeric"  name="cardNumber" 
+                                <input onChange={(e)=>changeDateCC(e)} type="text" maxLength='5' inputmode="numeric"  name="cardNumber" 
                                 placeholder="MM/YY" className="h-14 border-gray-400 border rounded-md p-2 outline-blue-500" />
                                 <TextField value={paymentData.cardCVC} onChange={(e)=>changePaymentData(e)} name="cardCVC" className="w-1/2" placeholder="CVC" variant="outlined" />
                             </div>
