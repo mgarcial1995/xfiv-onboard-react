@@ -6,6 +6,7 @@ import check from "../assets/check.svg"
 import enter from "../assets/enter.png"
 import FormPersonal from "../components/FormPersonal"
 import FormPayment from "../components/FormPayment"
+import Plans from "../components/Plans"
 import Waiting from "../components/Waiting"
 import Button from "../components/ButtonComponent"
 import StepBar from "../components/StepBar"
@@ -31,7 +32,7 @@ function Register() {
         country: ""
     }
     const [textButton, setTextButton] = useState("Siguiente")
-    const [step, setStep] = useState(0)
+    const [step, setStep] = useState(1)
     const [userRegister, setUserRegister] = useState(userData)
     const [listChannels, setListChannels] = useState([])
     const [paymentData, setPaymentData] = useState(payment)
@@ -44,6 +45,7 @@ function Register() {
     const [userValidate, setUserValidate] = useState(false)
     const [listStep, setListStep] = useState([
         {text: "Información", active: true},
+        {text: "Planes", active: false},
         {text: "Pago", active: false},
         {text: "Envío de datos", active: false},
         {text: "Finalizar", active: false}
@@ -140,9 +142,13 @@ function Register() {
                 />
                 break;
             case 1:
-                return <FormPayment listCountries={countries} paymentData={paymentData} changePaymentData={changePaymentData} />
+                return <Plans listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
+                userRegister={userRegister} changeUserData={changeUserData}  />
                 break;
             case 2:
+                return <FormPayment listCountries={countries} paymentData={paymentData} changePaymentData={changePaymentData} />
+                break;
+            case 3:
                 return <Waiting />
                 break;
             default: return ""
@@ -167,9 +173,9 @@ function Register() {
         newlistArr[newstep].active = true
         setListStep(newlistArr)
         setTextButton(`Pagar $${totalPrice}`) 
-        if(newstep === 2){
-            sendData()
-        }
+        // if(newstep === 2){
+        //     sendData()
+        // }
     }
 
     let sendData = () => {
@@ -261,17 +267,17 @@ function Register() {
     return (
             <div className="flex flex-row w-full h-auto">
                 <div className="w-full h-auto relative">
-                    <img className="absolute top-8 left-8 w-12 h-12" src={Logo} />
-                    <div className="w-full md:w-10/12 bg-white h-full md:h-screen flex flex-col md:flex-row items-center md:items-stretch">
+                    <img className="absolute z-30 top-8 left-8 w-12 h-12" src={Logo} />
+                    <div className="relative z-10 w-full h-full md:h-screen flex flex-col md:flex-row items-center md:items-stretch">
                         <div className="w-full md:w-1/12 md:h-auto bg-white hidden lg:flex flex-row md:flex-col">
                             <div className="h-full flex flex-col justify-center items-center">
                                 <img className="w-18 md:mb-48" src={arrow} />
                             </div>
                         </div>
-                        <div className="w-full md:w-11/12 h-full px-8 mt-20 lg:m-0">
-                            <form className="w-auto h-full md:h-screen py-4 lg:py-16">
+                        <div className="w-full h-full px-8 mt-20 lg:m-0">
+                            <div className="w-full h-full md:h-screen py-4 lg:py-16">
                                 {switchStepper(step)}
-                                {step !== 2 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
+                                {step !== 3 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
                                     <Button onClickEvent={()=>nextStep()} buttonVal={buttonVal} text={textButton} />
                                     <p className="font-normal">o</p>
                                     {step === 0?<p className="font-semibold">pulse enter </p> : 
@@ -279,19 +285,21 @@ function Register() {
                                     }
                                     <img src={enter} />
                                 </div> : ""}
-                            </form>
+                            </div>
                         </div>
                     </div>
-                    <div className="hidden md:block w-80 absolute bottom-24 right-64">
-                        <img className="w-full h-auto" src={Logobg} />
-                    </div>
-                    <div className="hidden md:block absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
-                        <div className="flex flex-row justify-between">
-                            <p className="uppercase">sobre xfiv</p>
-                            <div> <img src={check} /> </div>
+                    {step!==1 ? <div>
+                        <div className="hidden md:block w-80 absolute bottom-24 right-64">
+                            <img className="z-0 w-full h-auto" src={Logobg} />
                         </div>
-                        <p className="text-blue-300 text-start pt-2">Puedes configurar tu bot de auto respuestas para que se encarguen de gestiones frecuentes y comunes por si solos sin depender de personal de asistencia.</p>
-                    </div>
+                        <div className="z-0 hidden md:block absolute bottom-16 shadow-gray-500 shadow-2xl right-16 bg-primary w-80 h-auto text-white p-4 rounded-xl">
+                            <div className="flex flex-row justify-between">
+                                <p className="uppercase">sobre xfiv</p>
+                                <div> <img src={check} /> </div>
+                            </div>
+                            <p className="text-blue-300 text-start pt-2">Puedes configurar tu bot de auto respuestas para que se encarguen de gestiones frecuentes y comunes por si solos sin depender de personal de asistencia.</p>
+                        </div>
+                    </div>:""}
                 </div>
                 <div className="hidden md:block w-96 h-auto lg:h-screen">
                     <StepBar listStep={listStep} />

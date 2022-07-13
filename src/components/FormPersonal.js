@@ -9,6 +9,10 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
     const [totalPrice, setTotalPrice] = useState(0)
     const [priceAgent, setPricePerAgent] = useState(0)
     const [totalPricesChannels, setTotalPricesChannels] = useState(0)
+    const [plans, setPlans] = useState([
+        {name:"Plan emprendedor", activate:true},
+        {name:"Personalizar", activate:false},
+    ])
     const [channels, setChannels] = useState([])
     const [typeChannel, setTypeChannel] = useState("")
 
@@ -98,11 +102,28 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-1/2 mt-6 md:mt-0">
-                    <h1 className="text-3xl font-semibold mb-4">Selección de canales</h1>
+                {/* <div className="w-full md:w-1/2 mt-6 md:mt-0">
+                    <h1 className="text-3xl font-semibold mb-2">Selección de canales</h1>
+                    <div className="w-full flex text-xl text-primary gap-x-8 font-normal mb-4">
+                    {plans.map((plan,i)=>{
+                        return <div key={i}> 
+                            <p className={`cursor-pointer py-2 px-4 pl-0 ${plan.activate ? "text-primary font-semibold" : "text-gray-400"}`}>{plan.name}</p>
+                            <hr className={`${plan.activate ? "border-primary" : "border-gray-400"}`} />
+                        </div>
+                    })
+                    }
+                    </div>
+                    <div className="w-full md:w-4/5 bg-blue-100 h-auto p-4">
+                        <p>Plan emprendedor</p>
+                        <div>
+                            <div><img /> <p>1 canal de WhatsApp</p></div>
+                            <div><img /> <p>900 conversaciones gratuitas</p></div>
+                            <div><img /> <p>1 linea activada</p></div>
+                            <div><img /> <p>3 agentes</p></div>
+                        </div>
+                    </div>
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
                         <Select onChange={(e)=>setTypeChannel(e.target.value)} value={typeChannel} 
-                        // input={<OutlinedInput label="Canal" />}
                         displayEmpty
                         renderValue={(selected) => {
                             if (selected === "") {
@@ -138,7 +159,7 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                         <p className="text-2xl font-extralight text-gray-500">C/1 Asistente virtual  = +{pricePerAgent}$</p>
                         <p className="text-2xl font-extralight text-gray-500">Costo Total {totalPrice}</p>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

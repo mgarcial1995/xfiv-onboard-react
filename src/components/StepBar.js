@@ -15,7 +15,7 @@ function StepBar({listStep}) {
                                 {listStep.map((el,i)=>{
                                     return <div key={i} className="flex flex-col m-0 items-center">
                                         <div className={` ${i===0?'w-3 h-3':'w-2 h-2'} rounded-full ${el.active ? 'bg-white': 'bg-blueShadow'}`}></div>
-                                        {i===3 ?"" :<div style={{"backgroundColor":"#6198DE"}} className="w-0.5 h-10"></div>}
+                                        {i===4 ?"" :<div style={{"backgroundColor":"#6198DE"}} className="w-0.5 h-10"></div>}
                                     </div>
 
                                 })
