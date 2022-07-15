@@ -21,7 +21,8 @@ function Register() {
         email: "",
         password: "",
         channels: "",
-        agents: 0
+        agents: 0,
+        teams: []
     }
     let payment = {
         email: "",
@@ -31,8 +32,13 @@ function Register() {
         cardName: "",
         country: ""
     }
+    let businessKeys = {
+        numberBusiness: "",
+        codeKey: "",
+    }
+    const [businessData, setBusinessData] = useState(businessKeys)
     const [textButton, setTextButton] = useState("Siguiente")
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(0)
     const [userRegister, setUserRegister] = useState(userData)
     const [listChannels, setListChannels] = useState([])
     const [paymentData, setPaymentData] = useState(payment)
@@ -143,7 +149,7 @@ function Register() {
                 break;
             case 1:
                 return <Plans listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
-                userRegister={userRegister} changeUserData={changeUserData}  />
+                userRegister={userRegister} changeUserData={changeUserData} businessData={businessData} setBusinessData={setBusinessData} />
                 break;
             case 2:
                 return <FormPayment listCountries={countries} paymentData={paymentData} changePaymentData={changePaymentData} />
@@ -173,64 +179,43 @@ function Register() {
         newlistArr[newstep].active = true
         setListStep(newlistArr)
         setTextButton(`Pagar $${totalPrice}`) 
-        // if(newstep === 2){
-        //     sendData()
-        // }
+        if(newstep === 2){
+            sendData()
+        }
     }
 
-    let sendData = () => {
-        let newUserData = {
-            "provedor": userRegister.channels[0].label,
-            "key": userRegister.codeCountry,
-            "phone": userRegister.phone,
-            "empresa": {
-              "name": userRegister.businessName,
-              "location": "en_US",
-              "email": userRegister.email,
-              "agents": Number(userRegister.agents),
-              "limits": 5,
-              "user_admin": userRegister.userName,
-              "password": userRegister.password,
-              "roles": "adminstrator"
+    let sendData =async () => {
+        let datos = {
+            "keys": {
+                "key": "N5Dajf5fMCLuQwA0iFNiJbCxAK",
+                "channel": "whatsapp",
+                "color_label":"#075E54",
+                "proveedor": "360dialog",
+                "phone": userRegister.phone
             },
-            "users": []
-        }
-        let newdata = {
-            "provedor": "360dialog",
-            "keys": [
-                {
-                "key": "JzBjlBVhZk3cNzqD9PbZrRwsAK",
-                "channel": userRegister.channels[0].label,
-                "phone": "663988446978209"
-                }
-            ],
-            "phone": "421958931993117",
-            "empresa": {
-                "name": "string",
+            "business": {
+                "fullName": userRegister.fullName,
+                "useName": userRegister.userName,
+                "codeCountry": userRegister.codeCountry,
+                "businessName": userRegister.businessName,
                 "location": "en_US",
-                "email": "user@example.com",
-                "agents": 0,
-                "limits": 0,
-                "user_admin": "string",
-                "password": "stringst",
-                "roles": "administrator"
+                "agents": 3,
+                "inboxes": 1000,
+                "email": userRegister.email,
+                "password": userRegister.password,
+                "roles": "administrator",
+                "nameBot":""
             },
+            "teams": userRegister.teams
         }
-        console.log(newUserData)
-        let config = {
-            method: "post",
-            url: `http://52.25.41.89:5056/api/accounts`,
-            headers: {
-                Authorization: "Basic dXNlcjE6cGFzczE=",
-            }
-        };
-        axios(config)
-        .then((response) => {
-            console.log(response)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        
+        // const { data } = await axios.post(`http://52.25.41.89:5056/api/accounts`, datos, {
+        //     headers:{
+        //     'Authorization': 'Basic dXNlcjE6cGFzczE='
+        //     }
+        // })
+        console.log(datos)
+        console.log(businessData)
     }
 
     let validate = (name, value) => {
@@ -278,7 +263,7 @@ function Register() {
                             <div className="w-full h-full md:h-screen py-4 lg:py-16">
                                 {switchStepper(step)}
                                 {step !== 3 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
-                                    <Button onClickEvent={()=>nextStep()} buttonVal={buttonVal} text={textButton} />
+                                    <Button onClickEvent={()=>nextStep()} buttonVal={true} text={textButton} />
                                     <p className="font-normal">o</p>
                                     {step === 0?<p className="font-semibold">pulse enter </p> : 
                                     <p className="font-semibold ">Omitir este paso </p>
