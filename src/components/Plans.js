@@ -4,9 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons'
 import Button from "./ButtonComponent"
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import { useNavigate } from "react-router-dom";
 
 let plansComplete = [
     {
@@ -28,45 +26,19 @@ let plansComplete = [
         price: 0
     },
 ]
-function Plans({setUserRegister, setPriceSum, userRegister, changeUserData, listChannels, businessData, setBusinessData}) {
+function Plans({setUserRegister, userRegister, setButtonVal, businessData, setBusinessData,setStep, setTextButton}) {
     const [listPlans, setListPlans] = useState(plansComplete)
     const [activeAdd, setActiveAdd] = useState(false)
     const [messageTeam, setMessageTeam] = useState(false)
     const [activeCode, setActiveCode] = useState(false)
     const [showTeamSection, setShowTeamSection] = useState(false)
 
-    
-    const [totalPrice, setTotalPrice] = useState(0)
-    const [priceAgent, setPricePerAgent] = useState(0)
-    const [totalPricesChannels, setTotalPricesChannels] = useState(0)
+    const [planSelected, setPlanSelected] = useState({})
+
     const [teams, setTeams] = useState([])
     const [teamName, setTeamName] = useState("")
+    const navigate = useNavigate();
 
-    const pricePerAgent = 15
-    const typeChat = [
-        {label:"WhatsApp", value:"WhatsApp"},
-        {label:"Telegram", value:"Telegram"},
-        {label:"Messenger", value:"Messenger"}
-    ]
-    const providersMulti = [
-        {label:"360dialog", value:"360dialog", price: 20},
-        {label:"facebook-messenger", value:"facebook-messenger", price: 10},
-        {label:"whatsapp_cloud", value:"whatsapp_cloud", price: 5},
-        {label:"telegram", value:"telegram", price: 8},
-        {label:"ultramsg", value:"ultramsg", price: 3},
-        {label:"web", value:"web", price: 3},
-    ]
-    let changeAgent = (e) => {
-        changeUserData(e)
-        let agents = e.target.value === "" || e.target.value === null ? 0 : e.target.value
-        let newprice = Number(agents)*pricePerAgent
-        setPricePerAgent(newprice)
-    }
-    let changeChannelsSelect = (e) => {
-        let channelsel = listChannels[e.target.value]
-        setUserRegister({...userRegister, channels:channelsel.label})
-        setTotalPricesChannels(channelsel.price)
-    }
     useEffect(() => {
         if(teamName.trim().length > 4){
             setActiveAdd(true)
@@ -76,6 +48,16 @@ function Plans({setUserRegister, setPriceSum, userRegister, changeUserData, list
     },[teamName])
     let selectPlan = (i) => {
         let plans = [...listPlans]
+        let newPlanSel = Object.assign({},planSelected)
+        newPlanSel = plans[i]
+        setPlanSelected(newPlanSel)
+        console.log(newPlanSel)
+        if(newPlanSel.name === "Plan WhatsApp"){
+            // setTextButton(`Pagar $50`)
+        }else{
+            navigate("/senddata");
+            // setTextButton(`Siguiente`)
+        }
         if(i===0){
             plans = [plans[0]]
         }else{
@@ -116,10 +98,6 @@ function Plans({setUserRegister, setPriceSum, userRegister, changeUserData, list
         }
         return newPrice
     }
-    useEffect(() => {
-        setTotalPrice(priceAgent+totalPricesChannels)
-        setPriceSum(priceAgent+totalPricesChannels)
-    }, [userRegister,totalPricesChannels]);
     useEffect(() => {
         if(businessData.codeKey.length > 7){
             setShowTeamSection(true)

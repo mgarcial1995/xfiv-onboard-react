@@ -56,10 +56,10 @@ function FormPayment({paymentData, changePaymentData, listCountries}) {
                         <div className="w-full lg:w-4/12 flex flex-col gap-y-4">
                             <TextField value={paymentData.email} onChange={(e)=>changePaymentData(e)} name="email" className="w-full" placeholder="Email" variant="outlined" />
                             {/* <TextField value={paymentData.cardNumber} onChange={(e)=>changePaymentData(e)} name="cardNumber" type="tel" className="w-full" placeholder="0000 0000 0000 0000" variant="outlined" /> */}
-                            <input onChange={(e)=>changeCC(e)} type="tel" inputMode="numeric" pattern="[0-9\s]{13,19}" autoComplete="cc-number" maxLength="19" name="cardNumber" 
+                            <input onChange={(e)=>changeCC(e)} type="tel" pattern="[0-9\s]{13,19}" autoComplete="cc-number" maxLength="19" name="cardNumber" 
                             placeholder="0000 0000 0000 0000" className="h-14 border-gray-400 border rounded-md p-2 outline-blue-500" />
                             <div className="w-full flex flex-row gap-x-6">
-                                <input onChange={(e)=>changeDateCC(e)} type="text" maxLength='5' inputmode="numeric"  name="cardNumber" 
+                                <input onChange={(e)=>changeDateCC(e)} type="text" maxLength='5' name="cardNumber" 
                                 placeholder="MM/YY" className="h-14 border-gray-400 border rounded-md p-2 outline-blue-500" />
                                 <TextField value={paymentData.cardCVC} onChange={(e)=>changePaymentData(e)} name="cardCVC" className="w-1/2" placeholder="CVC" variant="outlined" />
                             </div>

@@ -87,8 +87,7 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                             </div>:""}
                          </div>
                         <div className="w-full relative"> 
-                            <TextField inputProps={{ inputMode: 'text', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$' }} type="password" 
-                            value={userRegister.password} onChange={(e)=>changeUserData(e)} name="password" className="w-full"  label="Contraseña" variant="outlined" />
+                            <TextField  type="password" value={userRegister.password} onChange={(e)=>changeUserData(e)} name="password" className="w-full"  label="Contraseña" variant="outlined" />
                             {passValidate ? <div className="absolute w-full md:w-80 bg-white py-2 px-4 z-10 h-auto rounded-lg
                                 border-primary border mt-2 shadow-sm shadow-primary ">
                                 <p>La contraseña debe tener:</p>

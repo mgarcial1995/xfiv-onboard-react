@@ -42,7 +42,6 @@ function Register() {
     const [userRegister, setUserRegister] = useState(userData)
     const [listChannels, setListChannels] = useState([])
     const [paymentData, setPaymentData] = useState(payment)
-    const [advert, setAdvert] = useState("aaaa")
     const [countries, setCountries] = useState([])
     const [totalPrice, setPriceSum] = useState(0)
     const [buttonVal, setButtonVal] = useState(false)
@@ -63,14 +62,14 @@ function Register() {
             userRegister.fullName!==""&& 
             userRegister.businessName!==""&& 
             userRegister.codeCountry!=="" && 
-            userRegister.phone!==""&& 
-            userRegister.channels!==""&& 
-            userRegister.agents!==0 &&
+            userRegister.phone!==""&&
             !passValidate && 
             !emailValidate && 
             !userValidate)
         {
             setButtonVal(true)
+        }else{
+            setButtonVal(false)
         }
     },[passValidate,emailValidate,userValidate,userRegister])
     useEffect(() => {
@@ -99,42 +98,7 @@ function Register() {
                 console.log(error);
             });
         })
-        
-        let configChannels = {
-            method: "get",
-            url: "http://52.25.41.89:5056/api/channels",
-            headers: {
-                Authorization: "Basic dXNlcjE6cGFzczE=",
-                "Content-Type": "application/json"
-            }
-        }
-        axios(configChannels)
-        .then(async (response) => {
-            let resChannels = response.data
 
-            let channels = await Promise.all(resChannels.map(async el => {
-                let obj = {}
-                let configChannel = {
-                    method: "get",
-                    url: "http://52.25.41.89:5056/api/channels_plan/"+el.channel,
-                    headers: {
-                        Authorization: "Basic dXNlcjE6cGFzczE=",
-                        "Content-Type": "application/json"
-                    }
-                }
-                await axios(configChannel)
-                .then((async result => {
-                    let infoChannel = await result.data[0]
-                    obj = {
-                        value: el.channel,
-                        label: el.channel,
-                        price: infoChannel ? infoChannel.price : 0
-                    }
-                }))
-                return obj
-            }))
-            setListChannels(channels)
-        })
         .catch((error) => {
             console.log(error);
         });
@@ -148,7 +112,7 @@ function Register() {
                 />
                 break;
             case 1:
-                return <Plans listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
+                return <Plans setButtonVal={setButtonVal} setTextButton={setTextButton} setStep={setStep} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
                 userRegister={userRegister} changeUserData={changeUserData} businessData={businessData} setBusinessData={setBusinessData} />
                 break;
             case 2:
@@ -178,9 +142,10 @@ function Register() {
         setStep(newstep)
         newlistArr[newstep].active = true
         setListStep(newlistArr)
-        setTextButton(`Pagar $${totalPrice}`) 
+        setButtonVal(false)
         if(newstep === 2){
             sendData()
+            setTextButton(`Pagar $50`)
         }
     }
 
@@ -214,12 +179,10 @@ function Register() {
         //     'Authorization': 'Basic dXNlcjE6cGFzczE='
         //     }
         // })
-        console.log(datos)
-        console.log(businessData)
     }
 
     let validate = (name, value) => {
-        let validatePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/
+        let validatePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,30}$/
         let validateUserAdmin = /^(?=\w*[A-Z])(?=\w*[a-z])\S{5,20}$/
         let validateEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         switch (name) {
