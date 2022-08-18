@@ -59,7 +59,11 @@ function FormPersonal({setUserRegister, setPriceSum, userRegister, changeUserDat
                 <div className="w-full md:w-1/2">
                     <h1 className="text-3xl font-semibold mb-4">Información de cuenta</h1>
                     <div className="w-full md:w-4/5 flex flex-col gap-y-4">
-                        <TextField value={userRegister.fullName} onChange={(e)=>changeUserData(e)} name="fullName" className="w-full"  label="Nombre completo" variant="outlined" />
+                        <div className="w-full flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-6">
+                            <TextField value={userRegister.firstname} onChange={(e)=>changeUserData(e)} name="firstname" className="w-full md:w-1/2"  label="Nombres" variant="outlined" />
+                            <TextField value={userRegister.lastname} onChange={(e)=>changeUserData(e)} name="lastname" className="w-full md:w-1/2"  label="Apellidos" variant="outlined" />
+                        </div>
+                        {/* <TextField value={userRegister.fullName} onChange={(e)=>changeUserData(e)} name="fullName" className="w-full"  label="Nombre completo" variant="outlined" /> */}
                         <div className="w-full flex flex-col md:flex-row gap-x-6">
                             <div className="w-full mb-4 md:m-0 md:w-2/5 relative">
                                 <TextField value={userRegister.userName} onChange={(e)=>changeUserData(e)} name="userName" className="w-full"  label="Nombre de usuario" variant="outlined" />

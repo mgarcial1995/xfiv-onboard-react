@@ -13,6 +13,8 @@ import StepBar from "../components/StepBar"
 import axios from "axios"
 function Register() {
     let userData = {
+        firstname:"",
+        lastname:"",
         fullName: "",
         userName: "",
         businessName: "",
@@ -52,6 +54,7 @@ function Register() {
 
     const [payFormSend, setPayFormSend] = useState({})
     const [userIP, setUserIP] = useState(null)
+    const [typeCard, setTypeCard] = useState("")
 
 
     const [listStep, setListStep] = useState([
@@ -61,6 +64,9 @@ function Register() {
         {text: "Envío de datos", active: false},
         {text: "Finalizar", active: false}
     ])
+    // useEffect(() => {
+    //     creditCardType(paymentData.cardNumber)
+    // },[paymentData])
     useEffect(() => {
         if(userRegister.userName!==""&& 
             userRegister.email!==""&& 
@@ -200,16 +206,60 @@ function Register() {
         //     }
         // })
     }
+    function creditCardType(card) {
+        let re = new RegExp("^4");
+        if (card.match(re) != null)
+            return "Visa";
 
+        // Mastercard 
+        // Updated for Mastercard 2017 BINs expansion
+        re = new RegExp("^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$");
+        if (card.match(re)) 
+            return "Mastercard";
+
+        // AMEX
+        re = new RegExp("^3[47]");
+        if (card.match(re) != null)
+            return "AMEX";
+
+        // Discover
+        re = new RegExp("^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)");
+        if (card.match(re) != null)
+            return "Discover";
+
+        // Diners
+        re = new RegExp("^36");
+        if (card.match(re) != null)
+            return "Diners";
+
+        // Diners - Carte Blanche
+        re = new RegExp("^30[0-5]");
+        if (card.match(re) != null)
+            return "Diners - Carte Blanche";
+
+        // JCB
+        re = new RegExp("^35(2[89]|[3-8][0-9])");
+        if (card.match(re) != null)
+            return "JCB";
+
+        // Visa Electron
+        re = new RegExp("^(4026|417500|4508|4844|491(3|7))");
+        if (card.match(re) != null)
+            return "Visa Electron";
+
+        return "";
+    }
     let payPlan = () => {
         let number = btoa(paymentData.cardNumber+":xfiv-provider")
         let index = paymentData.cardDate.indexOf('/')
 
         let expirationYear = btoa(paymentData.cardDate.substring(index+1, paymentData.cardDate.length)+":xfiv-provider")
         let expirationMonth = btoa(paymentData.cardDate.substring(0,index)+":xfiv-provider")
-
+        
         let cvv = btoa(paymentData.cardCVC+":xfiv-provider")
-        console.log({number,expirationYear,expirationMonth,cvv})
+        let tpcard = creditCardType(paymentData.cardNumber)
+        console.log(paymentData.cardNumber)
+        console.log({number,expirationYear,expirationMonth,cvv,tpcard})
         let obj = {
             "card": {
                 "number": number,
@@ -224,14 +274,18 @@ function Register() {
                 "phone": "+593XXXXXXXX",
                 "email": "email@domain.com"
             },
-                "currency": "USD",
-                "baseAmount0": 0.00,
-                "baseAmount12": 12.00,
-                "installments": "3",
-                "interests": "0",
-                "brandCard": "VISA",
-                "description": "Pago desde API",
-                "shippingAddress": {
+            "paramsRecurrent": {
+                "permiteCalendarizar": true,
+                "idPlan": "12"
+            },
+            "currency": "USD",
+            "baseAmount0": 0.00,
+            "baseAmount12": 12.00,
+            "installments": "3",
+            "interests": "0",
+            "brandCard": "VISA", //tpcard!=="" ? tpcard.toUpperCase() : ""
+            "description": "Pago desde API",
+            "shippingAddress": {
                 "country": "Ecuador",
                 "city": "Ibarra",
                 "street": "Bolivar y Borrero",
