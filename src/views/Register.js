@@ -48,9 +48,15 @@ function Register() {
     const [passValidate, setPassValidate] = useState(false)
     const [emailValidate, setEmailValidate] = useState(false)
     const [userValidate, setUserValidate] = useState(false)
+
+
+    const [payFormSend, setPayFormSend] = useState({})
+    const [userIP, setUserIP] = useState(null)
+
+
     const [listStep, setListStep] = useState([
         {text: "Información", active: true},
-        {text: "Planes", active: false},
+        // {text: "Planes", active: false},
         {text: "Pago", active: false},
         {text: "Envío de datos", active: false},
         {text: "Finalizar", active: false}
@@ -81,6 +87,16 @@ function Register() {
                 "user-email": "1995@gmail.com"
             }
         };
+
+        let configip = {
+            method: "get",
+            url: `https://api.ipify.org?format=json`
+        };
+        axios(configip).then((response)=>{
+            setUserIP(response.data.ip)
+            setPayFormSend({ip: response.data.ip})
+        })
+
         axios(configcountries)
         .then((response) => {
             let config = {
@@ -111,14 +127,14 @@ function Register() {
                 passValidate={passValidate} emailValidate={emailValidate} userValidate={userValidate}
                 />
                 break;
+            // case 1:
+            //     return <Plans setButtonVal={setButtonVal} setTextButton={setTextButton} setStep={setStep} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
+            //     userRegister={userRegister} changeUserData={changeUserData} businessData={businessData} setBusinessData={setBusinessData} />
+            //     break;
             case 1:
-                return <Plans setButtonVal={setButtonVal} setTextButton={setTextButton} setStep={setStep} listChannels={listChannels} setPriceSum={setPriceSum} setUserRegister={setUserRegister} 
-                userRegister={userRegister} changeUserData={changeUserData} businessData={businessData} setBusinessData={setBusinessData} />
-                break;
-            case 2:
                 return <FormPayment listCountries={countries} paymentData={paymentData} changePaymentData={changePaymentData} />
                 break;
-            case 3:
+            case 2:
                 return <Waiting />
                 break;
             default: return ""
@@ -143,7 +159,11 @@ function Register() {
         newlistArr[newstep].active = true
         setListStep(newlistArr)
         setButtonVal(false)
+        console.log(paymentData)
         if(newstep === 2){
+            payPlan()
+        }
+        if(newstep === 1){
             sendData()
             setTextButton(`Pagar $50`)
         }
@@ -173,12 +193,54 @@ function Register() {
             },
             "teams": userRegister.teams
         }
-        
+        console.log(datos)
         // const { data } = await axios.post(`http://52.25.41.89:5056/api/accounts`, datos, {
         //     headers:{
         //     'Authorization': 'Basic dXNlcjE6cGFzczE='
         //     }
         // })
+    }
+
+    let payPlan = () => {
+        let number = btoa(paymentData.cardNumber+":xfiv-provider")
+        let index = paymentData.cardDate.indexOf('/')
+
+        let expirationYear = btoa(paymentData.cardDate.substring(index+1, paymentData.cardDate.length)+":xfiv-provider")
+        let expirationMonth = btoa(paymentData.cardDate.substring(0,index)+":xfiv-provider")
+
+        let cvv = btoa(paymentData.cardCVC+":xfiv-provider")
+        console.log({number,expirationYear,expirationMonth,cvv})
+        let obj = {
+            "card": {
+                "number": number,
+                "expirationYear": expirationYear,
+                "expirationMonth": expirationMonth,
+                "cvv": cvv
+            },
+            "buyer": {
+                "documentNumber": "1710020012",
+                "firstName": "Pago",
+                "lastName": "Plux",
+                "phone": "+593XXXXXXXX",
+                "email": "email@domain.com"
+            },
+                "currency": "USD",
+                "baseAmount0": 0.00,
+                "baseAmount12": 12.00,
+                "installments": "3",
+                "interests": "0",
+                "brandCard": "VISA",
+                "description": "Pago desde API",
+                "shippingAddress": {
+                "country": "Ecuador",
+                "city": "Ibarra",
+                "street": "Bolivar y Borrero",
+                "number": "2-80"
+            },
+            "clientIp": userIP,
+            "idEstablecimiento": "MQ=="
+        }
+
     }
 
     let validate = (name, value) => {
@@ -218,14 +280,14 @@ function Register() {
                     <img className="absolute z-30 top-8 left-8 w-12 h-12" src={Logo} />
                     <div className="relative z-10 w-full h-full md:h-screen flex flex-col md:flex-row items-center md:items-stretch">
                         <div className="w-full md:w-1/12 md:h-auto bg-white hidden lg:flex flex-row md:flex-col">
-                            <div className="h-full flex flex-col justify-center items-center">
+                            {/* <div className="h-full flex flex-col justify-center items-center">
                                 <img className="w-18 md:mb-48" src={arrow} />
-                            </div>
+                            </div> */}
                         </div>
                         <div className="w-full h-full px-8 mt-20 lg:m-0">
                             <div className="w-full h-full md:h-screen py-4 lg:py-16">
                                 {switchStepper(step)}
-                                {step !== 3 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
+                                {step !== 2 ? <div className="w-full lg:w-2/4 flex flex-row justify-center md:justify-start mt-4 gap-6 items-center text-gray-500">
                                     <Button onClickEvent={()=>nextStep()} buttonVal={true} text={textButton} />
                                     <p className="font-normal">o</p>
                                     {step === 0?<p className="font-semibold">pulse enter </p> : 
@@ -236,7 +298,7 @@ function Register() {
                             </div>
                         </div>
                     </div>
-                    {step!==1 ? <div>
+                    {step!==2 ? <div>
                         <div className="hidden md:block w-80 absolute bottom-24 right-64">
                             <img className="z-0 w-full h-auto" src={Logobg} />
                         </div>

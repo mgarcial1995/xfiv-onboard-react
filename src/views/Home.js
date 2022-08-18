@@ -20,7 +20,7 @@ function Home() {
                     <p className='text-2xl text-gray-400'>Tu plataforma omnicanal inteligente</p>
                 </div>
                 <div className='my-6 text-center'>
-                    <Link  to="/register"><Button buttonVal={true} text="Empecemos" onClickEvent="" /></Link>
+                    <Link  to="/tips"><Button buttonVal={true} text="Empecemos" onClickEvent="" /></Link>
                 </div>
           </div>
       </div>

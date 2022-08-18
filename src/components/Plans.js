@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextField from '@mui/material/TextField';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon  } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons'
 import Button from "./ButtonComponent"
